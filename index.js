@@ -33,10 +33,10 @@ module.exports = function(babel) {
                         const specifiersName = specifiers[i].imported.name
                         // 开启类tree-shaking效果，未引用变量不处理
                         if (path.scope.bindings[specifiersName].references) {
-                            const stringLiteralComponent = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}`
-                            const importDefaultSpecifier = t.importDefaultSpecifier(t.identifier(specifiersName))
                             let importDeclarationComponent = ''
                             let importDeclarationStyle = ''
+                            const stringLiteralComponent = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}`
+                            const importDefaultSpecifier = t.importDefaultSpecifier(t.identifier(specifiersName))
                             importDeclarationComponent = getImportDeclaration([importDefaultSpecifier], stringLiteralComponent)
                             if (isStyle) {
                                 // if opts.style && opts.styleCustom exist throw err 
