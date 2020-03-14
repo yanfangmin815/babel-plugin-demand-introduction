@@ -1,7 +1,7 @@
 {
-  "name": "babel-plugin-demand-introduction",
+  "name": "babel-plugin-mayfly",
   "version": "1.0.0",
-  "description": "babel-plugin-demand-introduction",
+  "description": "babel-plugin-mayfly",
   "main": "index.js",
   "dependencies": {
     "@babel/types": "^7.8.6"
@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "babel-plugin-demand-introduction"
+    "babel-plugin-mayfly"
   ],
   "author": "yanfm",
   "license": "ISC"
