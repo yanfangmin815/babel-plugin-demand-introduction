@@ -15,7 +15,6 @@ module.exports = function(babel) {
                 if (opts && !opts.libraryName) {
                     throw 'field libraryname is required'
                 }
-
                 if (Object.is(path.node.source.value, opts.libraryName)) {
 
                     if (opts && !opts.libraryDirectory) {
