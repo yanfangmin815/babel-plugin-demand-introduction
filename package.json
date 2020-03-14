@@ -1,0 +1,17 @@
+{
+  "name": "babel-plugin-demand-introduction",
+  "version": "1.0.0",
+  "description": "babel-plugin-demand-introduction",
+  "main": "index.js",
+  "dependencies": {
+    "@babel/types": "^7.8.6"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "babel-plugin-demand-introduction"
+  ],
+  "author": "yanfm",
+  "license": "ISC"
+}
