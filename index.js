@@ -33,8 +33,8 @@ module.exports = function(babel) {
                         const specifiersName = specifiers[i].imported.name
                         // 开启类tree-shaking效果，未引用变量不处理
                         if (path.scope.bindings[specifiersName].references) {
-                            const stringLiteralComponent = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiers[i].imported.name)}`
-                            const importDefaultSpecifier = t.importDefaultSpecifier(t.identifier(specifiers[i].imported.name))
+                            const stringLiteralComponent = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}`
+                            const importDefaultSpecifier = t.importDefaultSpecifier(t.identifier(specifiersName))
                             let importDeclarationComponent = ''
                             let importDeclarationStyle = ''
                             importDeclarationComponent = getImportDeclaration([importDefaultSpecifier], stringLiteralComponent)
@@ -45,10 +45,10 @@ module.exports = function(babel) {
                                 }
                                 let stringLiteralStyle = ''
                                 if (opts.style) {
-                                    stringLiteralStyle = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiers[i].imported.name)}/style/${opts.style}`
+                                    stringLiteralStyle = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}/style/${opts.style}`
                                 }
                                 if (opts.styleCustom) {
-                                    stringLiteralStyle = `${libraryName}/${eval(opts.styleCustom)(getLowerCase(specifiers[i].imported.name))}`
+                                    stringLiteralStyle = `${libraryName}/${eval(opts.styleCustom)(getLowerCase(specifiersName))}`
                                 }
                                 importDeclarationStyle = getImportDeclaration([], stringLiteralStyle)
                             }
