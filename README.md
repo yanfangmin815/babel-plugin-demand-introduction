@@ -5,7 +5,7 @@
  "plugins": [
         ...
         // styleCustom or style, not both
-        [ "lazy-import", {
+        [ "mayfly", {
             "libraryName": "i-mayfly",
             "libraryDirectory": "lib/component",
             "styleCustom": "(item) => 'lib/sass/'+ item + '/index.scss'",
