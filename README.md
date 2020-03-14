@@ -35,3 +35,6 @@
     import Table from 'i-mayfly/lib/component/table'
     import 'i-mayfly/lib/sass/table/style/css.js'  
 ```
+
+## Other 其他
+> 开启了tree-shaking，同一文件中未引用的变量不做处理

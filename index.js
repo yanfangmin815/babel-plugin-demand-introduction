@@ -13,10 +13,10 @@ module.exports = function(babel) {
                 let isStyle = false
                 // 如果需要获取参数可以使用opts
                 if (opts && !opts.libraryName) {
-                    throw 'field libraryname is required'
+                    throw 'libraryname is required'
                 }
                 if (Object.is(path.node.source.value, opts.libraryName)) {
-
+                    // console.log(path.scope.bindings.Table.references, '>>>>>>>>>>>>>>>>>')
                     if (opts && !opts.libraryDirectory) {
                         opts.libraryDirectory = 'lib'
                     }
@@ -30,26 +30,30 @@ module.exports = function(babel) {
                    
                     // new path.node.specifiers.length 个ImportDeclaration语句：引入组件&引入样式文件
                     for (let i=0; i<len; i++){
-                        const stringLiteralComponent = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiers[i].imported.name)}`
-                        const importDefaultSpecifier = t.importDefaultSpecifier(t.identifier(specifiers[i].imported.name))
-                        let importDeclarationComponent = ''
-                        let importDeclarationStyle = ''
-                        importDeclarationComponent = getImportDeclaration([importDefaultSpecifier], stringLiteralComponent)
-                        if (isStyle) {
-                            // if opts.style && opts.styleCustom exist throw err 
-                            if (opts.style && opts.styleCustom) {
-                                throw 'opts.style or opts.styleCustom can only have one, but received two'
+                        const specifiersName = specifiers[i].imported.name
+                        // 开启类tree-shaking效果，未引用变量不处理
+                        if (path.scope.bindings[specifiersName].references) {
+                            const stringLiteralComponent = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiers[i].imported.name)}`
+                            const importDefaultSpecifier = t.importDefaultSpecifier(t.identifier(specifiers[i].imported.name))
+                            let importDeclarationComponent = ''
+                            let importDeclarationStyle = ''
+                            importDeclarationComponent = getImportDeclaration([importDefaultSpecifier], stringLiteralComponent)
+                            if (isStyle) {
+                                // if opts.style && opts.styleCustom exist throw err 
+                                if (opts.style && opts.styleCustom) {
+                                    throw 'opts.style or opts.styleCustom can only have one, but received two'
+                                }
+                                let stringLiteralStyle = ''
+                                if (opts.style) {
+                                    stringLiteralStyle = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiers[i].imported.name)}/style/${opts.style}`
+                                }
+                                if (opts.styleCustom) {
+                                    stringLiteralStyle = `${libraryName}/${eval(opts.styleCustom)(getLowerCase(specifiers[i].imported.name))}`
+                                }
+                                importDeclarationStyle = getImportDeclaration([], stringLiteralStyle)
                             }
-                            let stringLiteralStyle = ''
-                            if (opts.style) {
-                                stringLiteralStyle = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiers[i].imported.name)}/style/${opts.style}`
-                            }
-                            if (opts.styleCustom) {
-                                stringLiteralStyle = `${libraryName}/${eval(opts.styleCustom)(getLowerCase(specifiers[i].imported.name))}`
-                            }
-                            importDeclarationStyle = getImportDeclaration([], stringLiteralStyle)
+                            typesArrs.push(importDeclarationComponent, importDeclarationStyle)
                         }
-                        typesArrs.push(importDeclarationComponent, importDeclarationStyle)
                     }
                     path.replaceWithMultiple(typesArrs)
                 }           
