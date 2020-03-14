@@ -1,7 +1,7 @@
 
 ## Usage 使用
 > .babelrc文件配置
-```json
+```js
  "plugins": [
         ...
         // styleCustom or style, not both
