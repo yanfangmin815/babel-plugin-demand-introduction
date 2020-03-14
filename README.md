@@ -18,10 +18,12 @@
 ## Example 示例
 ```js
  import { Table } from 'i-mayfly';
+
  1. [ "lazy-import", {
         ...
         "styleCustom": "(item) => 'lib/sass/'+ item + '/index.scss'"
     }]
+
     import Table from 'i-mayfly/lib/component/table'
     import 'i-mayfly/lib/sass/table/index.scss'
 
@@ -29,6 +31,7 @@
         ...
         "style": "css"
     }]
+    
     import Table from 'i-mayfly/lib/component/table'
     import 'i-mayfly/lib/sass/table/style/css.js'  
 ```
