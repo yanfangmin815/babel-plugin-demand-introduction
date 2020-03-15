@@ -16,7 +16,7 @@ module.exports = function(babel) {
                 let isStyle = false
                 // 如果需要获取参数可以使用opts
                 if (opts && !opts.libraryName) {
-                    throw 'libraryname is required'
+                    throw path.buildCodeFrameError("libraryname is required")
                 }
                 if (Object.is(path.node.source.value, opts.libraryName)) {
                     if (opts && !opts.libraryDirectory) {
@@ -35,6 +35,14 @@ module.exports = function(babel) {
                     // new path.node.specifiers.length 个ImportDeclaration语句：引入组件&引入样式文件
                     // 注意：try...catch放到for循环体内外的区别
                     try {
+                        if (!len) {
+                            path.remove()
+                            return
+                        }
+                        // 不能包含默认导入和命名空间导入
+                        if (specifiers.some(i => t.isImportDefaultSpecifier(i) || t.isImportNamespaceSpecifier(i))) {
+                            throw path.buildCodeFrameError("不能使用默认导入或命名空间导入")
+                        }
                         for (let i=0; i<len; i++) {
                             const specifiersName = specifiers[i].imported.name
                             // 开启类tree-shaking效果，未引用变量不处理
@@ -47,7 +55,7 @@ module.exports = function(babel) {
                                 if (isStyle) {
                                     // if opts.style && opts.styleCustom exist throw err 
                                     if (opts.style && opts.styleCustom && opts.styleLibraryDirectory) {
-                                        throw 'style or styleCustom or styleLibraryDirectory can only have one, but received two'
+                                        throw path.buildCodeFrameError("style or styleCustom or styleLibraryDirectory can only have one, but received two")
                                     }
                                     let stringLiteralStyle = ''
                                     if (opts.style) {
@@ -65,7 +73,7 @@ module.exports = function(babel) {
                             }
                         } 
                     } catch (error) {
-                        throw error
+                        throw path.buildCodeFrameError(error)
                     } finally {
                         typesArrs.length ? path.replaceWithMultiple(typesArrs) : ''
                     }
