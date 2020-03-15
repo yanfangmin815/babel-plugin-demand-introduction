@@ -57,7 +57,7 @@ module.exports = function(babel) {
                                         stringLiteralStyle = `${libraryName}/${eval(opts.styleCustom)(getLowerCase(specifiersName))}`
                                     }
                                     if (opts.styleLibraryDirectory) {
-                                        stringLiteralStyle = `${libraryName}/${opts.styleLibraryDirectory}/${eval(opts.styleCustom)(getLowerCase(specifiersName))}`
+                                        stringLiteralStyle = `${libraryName}/${opts.styleLibraryDirectory}/${getLowerCase(specifiersName)}`
                                     }
                                     importDeclarationStyle = getImportDeclaration([], stringLiteralStyle)
                                 }
