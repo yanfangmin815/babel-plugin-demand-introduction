@@ -5,7 +5,7 @@
  "plugins": [
         ...
         // styleCustom or style, not both
-        [ "mayfly", {
+        [ "lib", {
             "libraryName": "i-mayfly",
             "libraryDirectory": "lib/component",
             "styleCustom": "(item) => 'lib/sass/'+ item + '/index.scss'",
@@ -20,7 +20,7 @@
 ```js
  import { Table } from 'i-mayfly';
 
- > [ "mayfly", {
+ > [ "lib", {
         ...
         "styleCustom": "(item) => 'lib/sass/'+ item + '/index.scss'"
     }]
@@ -28,7 +28,7 @@
     import Table from 'i-mayfly/lib/component/table'
     import 'i-mayfly/lib/sass/table/index.scss'
 
- > [ "mayfly", {
+ > [ "lib", {
         ...
         "style": "css"
     }]
@@ -36,7 +36,7 @@
     import Table from 'i-mayfly/lib/component/table'
     import 'i-mayfly/lib/sass/table/style/css.js' 
     
- > [ "mayfly", {
+ > [ "lib", {
         ...
         "styleLibraryDirectory": "lib/sass"
     }]
@@ -46,4 +46,4 @@
 ```
 
 ## Other 其他
-> 开启了tree-shaking，同一文件中未引用的变量不做处理
+> 开启tree-shaking，同一文件中未引用的变量不做处理

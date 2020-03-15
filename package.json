@@ -1,7 +1,7 @@
 {
-  "name": "babel-plugin-mayfly",
-  "version": "8.0.0",
-  "description": "babel-plugin-mayfly",
+  "name": "babel-plugin-lib",
+  "version": "0.0.1",
+  "description": "babel-plugin-lib",
   "main": "index.js",
   "dependencies": {
     "@babel/types": "^7.8.6",
@@ -11,16 +11,18 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "babel-plugin-mayfly"
+    "babel-plugin",
+    "load on demand",
+    "babel-plugin-lib"
   ],
   "author": "yanfm",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yanfangmin815/babel-plugin-mayfly.git"
+    "url": "https://github.com/yanfangmin815/babel-plugin-lib.git"
   },
   "bugs": {
-    "url": "https://github.com/yanfangmin815/babel-plugin-mayfly/issues"
+    "url": "https://github.com/yanfangmin815/babel-plugin-lib/issues"
   },
-  "homepage": "https://github.com/yanfangmin815/babel-plugin-mayfly#readme"
+  "homepage": "https://github.com/yanfangmin815/babel-plugin-lib#readme"
 }
