@@ -86,14 +86,14 @@ module.exports = class Plugin {
                             throw getBuildCodeFrameError(path, "style or styleCustom or styleLibraryDirectory can only have one, but received three")
                         }
                         let stringLiteralStyle = ''
-                        if (opts.style) {
+                        if (this.style) {
                             stringLiteralStyle = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}/style/${opts.style}`
                         }
-                        if (opts.styleCustom) {
-                            stringLiteralStyle = `${libraryName}/${eval(opts.styleCustom)(getLowerCase(specifiersName))}`
+                        if (this.styleCustom) {
+                            stringLiteralStyle = `${libraryName}/${eval(this.styleCustom)(getLowerCase(specifiersName))}`
                         }
-                        if (opts.styleLibraryDirectory) {
-                            stringLiteralStyle = `${libraryName}/${opts.styleLibraryDirectory}/${getLowerCase(specifiersName)}`
+                        if (this.styleLibraryDirectory) {
+                            stringLiteralStyle = `${libraryName}/${this.styleLibraryDirectory}/${getLowerCase(specifiersName)}`
                         }
                         importDeclarationStyle = getImportDeclaration([], stringLiteralStyle)
                     }
