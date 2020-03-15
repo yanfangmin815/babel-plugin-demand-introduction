@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-mayfly",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "description": "babel-plugin-mayfly",
   "main": "index.js",
   "dependencies": {
