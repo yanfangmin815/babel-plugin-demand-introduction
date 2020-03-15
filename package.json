@@ -14,5 +14,13 @@
     "babel-plugin-mayfly"
   ],
   "author": "yanfm",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yanfangmin815/babel-plugin-mayfly.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yanfangmin815/babel-plugin-mayfly/issues"
+  },
+  "homepage": "https://github.com/yanfangmin815/babel-plugin-mayfly#readme"
 }
