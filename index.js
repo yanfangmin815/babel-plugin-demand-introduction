@@ -22,7 +22,7 @@ module.exports = function(babel) {
                     if (opts && !opts.libraryDirectory) {
                         opts.libraryDirectory = 'lib'
                         log()
-                        log(warning('Librarydirectory will be defaulted to lib, please confirm whether it is suitable'));
+                        log(warning('warning:Librarydirectory will be defaulted to lib, please confirm whether it is suitable'));
                     }
                     if (opts && opts.style || opts.styleCustom || opts.styleLibraryDirectory) {
                         isStyle = true
@@ -57,7 +57,7 @@ module.exports = function(babel) {
                                         stringLiteralStyle = `${libraryName}/${eval(opts.styleCustom)(getLowerCase(specifiersName))}`
                                     }
                                     if (opts.styleLibraryDirectory) {
-                                        stringLiteralStyle = `${libraryName}/${opts.styleLibraryDirectory}/${getLowerCase(specifiersName)}`
+                                        stringLiteralStyle = `${libraryName}/${opts.styleLibraryDirectory}/${eval(opts.styleCustom)(getLowerCase(specifiersName))}`
                                     }
                                     importDeclarationStyle = getImportDeclaration([], stringLiteralStyle)
                                 }
