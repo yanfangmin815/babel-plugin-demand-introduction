@@ -1,4 +1,6 @@
 const t = require('@babel/types');
+const chalk = require('chalk');
+const log = console.log;
 
 module.exports = function(babel) {
     function getLowerCase(str) {
@@ -10,6 +12,7 @@ module.exports = function(babel) {
     return {
         visitor: {
             ImportDeclaration(path, { opts }) {
+                log(chalk.blue.bgRed.bold('Hello world!'));
                 let isStyle = false
                 // 如果需要获取参数可以使用opts
                 if (opts && !opts.libraryName) {
@@ -19,6 +22,7 @@ module.exports = function(babel) {
                     // console.log(path.scope.bindings.Table.references, '>>>>>>>>>>>>>>>>>')
                     if (opts && !opts.libraryDirectory) {
                         opts.libraryDirectory = 'lib'
+                        // throw 'Librarydirectory will be defaulted to lib, please confirm whether it is suitable'
                     }
                     if (opts && opts.style || opts.styleCustom) {
                         isStyle = true

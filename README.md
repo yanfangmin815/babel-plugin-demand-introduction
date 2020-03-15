@@ -9,6 +9,7 @@
             "libraryName": "i-mayfly",
             "libraryDirectory": "lib/component",
             "styleCustom": "(item) => 'lib/sass/'+ item + '/index.scss'",
+            // "styleLibraryDirectory": "lib/sass"
             // "style": "css"
         }],
         ...
@@ -33,7 +34,15 @@
     }]
 
     import Table from 'i-mayfly/lib/component/table'
-    import 'i-mayfly/lib/sass/table/style/css.js'  
+    import 'i-mayfly/lib/sass/table/style/css.js' 
+    
+3. [ "mayfly", {
+        ...
+        "styleLibraryDirectory": "lib/sass"
+    }]
+
+    import Table from 'i-mayfly/lib/component/table'
+    import 'i-mayfly/lib/sass/table' 
 ```
 
 ## Other 其他
