@@ -20,7 +20,7 @@
 ```js
  import { Table } from 'i-mayfly';
 
- 1. [ "mayfly", {
+ > [ "mayfly", {
         ...
         "styleCustom": "(item) => 'lib/sass/'+ item + '/index.scss'"
     }]
@@ -28,7 +28,7 @@
     import Table from 'i-mayfly/lib/component/table'
     import 'i-mayfly/lib/sass/table/index.scss'
 
- 2. [ "mayfly", {
+ > [ "mayfly", {
         ...
         "style": "css"
     }]
@@ -36,7 +36,7 @@
     import Table from 'i-mayfly/lib/component/table'
     import 'i-mayfly/lib/sass/table/style/css.js' 
     
-3. [ "mayfly", {
+ > [ "mayfly", {
         ...
         "styleLibraryDirectory": "lib/sass"
     }]
