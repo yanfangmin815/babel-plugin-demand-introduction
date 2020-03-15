@@ -1,83 +1,68 @@
-const t = require('@babel/types');
-const chalk = require('chalk');
-const log = console.log;
-const warning = chalk.bold.blue;
+const assert = require('assert');
+const Plugin = require('./Plugin');
 
-module.exports = function(babel) {
-    function getLowerCase(str) {
-        return str.toLowerCase()
+module.exports = function ({ types }) {
+  let plugins = null;
+
+  function applyInstance(method, args, context) {
+    for (const plugin of plugins) {
+      if (plugin[method]) {
+        plugin[method].apply(plugin, [...args, context]);
+      }
     }
-    function getImportDeclaration(specifiers, stringLiteralComponent) {
-        return t.importDeclaration(specifiers, t.stringLiteral(stringLiteralComponent) )
-    }
-    function getBuildCodeFrameError (path, msg) {
-        return path.buildCodeFrameError(msg)
-    }
-    return {
-        visitor: {
-            ImportDeclaration(path, { opts }) {
-                let isStyle = false
-                // 如果需要获取参数可以使用opts
-                if (opts && !opts.libraryName) {
-                    throw getBuildCodeFrameError(path, "libraryname is required")
-                }
-                if (Object.is(path.node.source.value, opts.libraryName)) {
-                    if (opts && !opts.libraryDirectory) {
-                        opts.libraryDirectory = 'lib'
-                        log()
-                        log(warning('warning:Librarydirectory will be defaulted to lib, please confirm whether it is suitable'));
-                    }
-                    if (opts && opts.style || opts.styleCustom || opts.styleLibraryDirectory) {
-                        isStyle = true
-                    }
-                    const { libraryName, libraryDirectory } = opts
-                    const specifiers = path.node.specifiers
-                    const len = specifiers.length
-                    let typesArrs = []
-                   
-                    // new path.node.specifiers.length 个ImportDeclaration语句：引入组件&引入样式文件
-                    // 注意：try...catch放到for循环体内外的区别
-                    try {
-                        if (!len) {
-                            path.remove()
-                            return
-                        }
-                        for (let i=0; i<len; i++) {
-                            const specifiersName = specifiers[i].imported.name
-                            // 开启类tree-shaking效果，未引用变量不处理
-                            if (path.scope.bindings[specifiersName].references) {
-                                let importDeclarationComponent = ''
-                                let importDeclarationStyle = ''
-                                const stringLiteralComponent = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}`
-                                const importDefaultSpecifier = t.importDefaultSpecifier(t.identifier(specifiersName))
-                                importDeclarationComponent = getImportDeclaration([importDefaultSpecifier], stringLiteralComponent)
-                                if (isStyle) {
-                                    // if opts.style && opts.styleCustom && opts.styleLibraryDirectory exist throw err 
-                                    if (opts.style && opts.styleCustom && opts.styleLibraryDirectory) {
-                                        throw getBuildCodeFrameError(path, "style or styleCustom or styleLibraryDirectory can only have one, but received three")
-                                    }
-                                    let stringLiteralStyle = ''
-                                    if (opts.style) {
-                                        stringLiteralStyle = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}/style/${opts.style}`
-                                    }
-                                    if (opts.styleCustom) {
-                                        stringLiteralStyle = `${libraryName}/${eval(opts.styleCustom)(getLowerCase(specifiersName))}`
-                                    }
-                                    if (opts.styleLibraryDirectory) {
-                                        stringLiteralStyle = `${libraryName}/${opts.styleLibraryDirectory}/${getLowerCase(specifiersName)}`
-                                    }
-                                    importDeclarationStyle = getImportDeclaration([], stringLiteralStyle)
-                                }
-                                typesArrs.push(importDeclarationComponent, importDeclarationStyle)
-                            }
-                        } 
-                    } catch (error) {
-                        throw getBuildCodeFrameError(path, error)
-                    } finally {
-                        typesArrs.length ? path.replaceWithMultiple(typesArrs) : ''
-                    }
-                }           
-            }
+  }
+
+  const Program = {
+    enter(path, { opts = {} }) {
+      // Init plugin instances once.
+      if (!plugins) {
+        if (Array.isArray(opts)) {
+          plugins = opts.map(({
+            libraryName,
+            libraryDirectory,
+            style,
+            styleLibraryDirectory,
+            styleCustom
+          }, index) => {
+            assert(libraryName, 'libraryName should be provided');
+            return new Plugin(
+                libraryName,
+                libraryDirectory,
+                style,
+                styleLibraryDirectory,
+                styleCustom
+            );
+          });
+        } else {
+          assert(opts.libraryName, 'libraryName should be provided');
+          plugins = [
+            new Plugin(
+              opts.libraryName,
+              opts.libraryDirectory,
+              opts.style,
+              opts.styleLibraryDirectory,
+              opts.styleCustom
+            ),
+          ];
         }
-    }
+      }
+    },
+    exit() {},
+  };
+
+  const methods = [
+    'ImportDeclaration'
+  ];
+
+  const ret = {
+    visitor: { Program }
+  };
+
+  for (const method of methods) {
+    ret.visitor[method] = function () { // eslint-disable-line
+      applyInstance(method, arguments, ret.visitor);  // eslint-disable-line
+    };
+  }
+
+  return ret
 }
