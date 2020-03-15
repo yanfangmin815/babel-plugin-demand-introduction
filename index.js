@@ -10,13 +10,16 @@ module.exports = function(babel) {
     function getImportDeclaration(specifiers, stringLiteralComponent) {
         return t.importDeclaration(specifiers, t.stringLiteral(stringLiteralComponent) )
     }
+    function getBuildCodeFrameError (path, msg) {
+        return path.buildCodeFrameError(msg)
+    }
     return {
         visitor: {
             ImportDeclaration(path, { opts }) {
                 let isStyle = false
                 // 如果需要获取参数可以使用opts
                 if (opts && !opts.libraryName) {
-                    throw path.buildCodeFrameError("libraryname is required")
+                    throw getBuildCodeFrameError(path, "libraryname is required")
                 }
                 if (Object.is(path.node.source.value, opts.libraryName)) {
                     if (opts && !opts.libraryDirectory) {
@@ -41,7 +44,8 @@ module.exports = function(babel) {
                         }
                         // 不能包含默认导入和命名空间导入
                         if (specifiers.some(i => t.isImportDefaultSpecifier(i) || t.isImportNamespaceSpecifier(i))) {
-                            throw path.buildCodeFrameError("不能使用默认导入或命名空间导入")
+                            return
+                            // throw getBuildCodeFrameError(path, "不能使用默认导入或命名空间导入")
                         }
                         for (let i=0; i<len; i++) {
                             const specifiersName = specifiers[i].imported.name
@@ -53,9 +57,9 @@ module.exports = function(babel) {
                                 const importDefaultSpecifier = t.importDefaultSpecifier(t.identifier(specifiersName))
                                 importDeclarationComponent = getImportDeclaration([importDefaultSpecifier], stringLiteralComponent)
                                 if (isStyle) {
-                                    // if opts.style && opts.styleCustom exist throw err 
+                                    // if opts.style && opts.styleCustom && opts.styleLibraryDirectory exist throw err 
                                     if (opts.style && opts.styleCustom && opts.styleLibraryDirectory) {
-                                        throw path.buildCodeFrameError("style or styleCustom or styleLibraryDirectory can only have one, but received two")
+                                        throw getBuildCodeFrameError(path, "style or styleCustom or styleLibraryDirectory can only have one, but received three")
                                     }
                                     let stringLiteralStyle = ''
                                     if (opts.style) {
@@ -73,7 +77,7 @@ module.exports = function(babel) {
                             }
                         } 
                     } catch (error) {
-                        throw path.buildCodeFrameError(error)
+                        throw getBuildCodeFrameError(path, error)
                     } finally {
                         typesArrs.length ? path.replaceWithMultiple(typesArrs) : ''
                     }
