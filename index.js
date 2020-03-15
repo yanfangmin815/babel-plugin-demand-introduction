@@ -29,33 +29,39 @@ module.exports = function(babel) {
                     let typesArrs = []
                    
                     // new path.node.specifiers.length 个ImportDeclaration语句：引入组件&引入样式文件
-                    for (let i=0; i<len; i++){
-                        const specifiersName = specifiers[i].imported.name
-                        // 开启类tree-shaking效果，未引用变量不处理
-                        if (path.scope.bindings[specifiersName].references) {
-                            let importDeclarationComponent = ''
-                            let importDeclarationStyle = ''
-                            const stringLiteralComponent = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}`
-                            const importDefaultSpecifier = t.importDefaultSpecifier(t.identifier(specifiersName))
-                            importDeclarationComponent = getImportDeclaration([importDefaultSpecifier], stringLiteralComponent)
-                            if (isStyle) {
-                                // if opts.style && opts.styleCustom exist throw err 
-                                if (opts.style && opts.styleCustom) {
-                                    throw 'opts.style or opts.styleCustom can only have one, but received two'
+                    // 注意：try...catch放到for循环体内外的区别
+                    try {
+                        for (let i=0; i<len; i++) {
+                            const specifiersName = specifiers[i].imported.name
+                            // 开启类tree-shaking效果，未引用变量不处理
+                            if (path.scope.bindings[specifiersName].references) {
+                                let importDeclarationComponent = ''
+                                let importDeclarationStyle = ''
+                                const stringLiteralComponent = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}`
+                                const importDefaultSpecifier = t.importDefaultSpecifier(t.identifier(specifiersName))
+                                importDeclarationComponent = getImportDeclaration([importDefaultSpecifier], stringLiteralComponent)
+                                if (isStyle) {
+                                    // if opts.style && opts.styleCustom exist throw err 
+                                    if (opts.style && opts.styleCustom) {
+                                        throw 'opts.style or opts.styleCustom can only have one, but received two'
+                                    }
+                                    let stringLiteralStyle = ''
+                                    if (opts.style) {
+                                        stringLiteralStyle = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}/style/${opts.style}`
+                                    }
+                                    if (opts.styleCustom) {
+                                        stringLiteralStyle = `${libraryName}/${eval(opts.styleCustom)(getLowerCase(specifiersName))}`
+                                    }
+                                    importDeclarationStyle = getImportDeclaration([], stringLiteralStyle)
                                 }
-                                let stringLiteralStyle = ''
-                                if (opts.style) {
-                                    stringLiteralStyle = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}/style/${opts.style}`
-                                }
-                                if (opts.styleCustom) {
-                                    stringLiteralStyle = `${libraryName}/${eval(opts.styleCustom)(getLowerCase(specifiersName))}`
-                                }
-                                importDeclarationStyle = getImportDeclaration([], stringLiteralStyle)
+                                typesArrs.push(importDeclarationComponent, importDeclarationStyle)
                             }
-                            typesArrs.push(importDeclarationComponent, importDeclarationStyle)
-                        }
+                        } 
+                    } catch (error) {
+                        throw error
+                    } finally {
+                        typesArrs.length ? path.replaceWithMultiple(typesArrs) : ''
                     }
-                    path.replaceWithMultiple(typesArrs)
                 }           
             }
         }
