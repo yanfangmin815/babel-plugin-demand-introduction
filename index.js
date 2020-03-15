@@ -1,6 +1,7 @@
 const t = require('@babel/types');
 const chalk = require('chalk');
 const log = console.log;
+const warning = chalk.bold.blue;
 
 module.exports = function(babel) {
     function getLowerCase(str) {
@@ -12,19 +13,18 @@ module.exports = function(babel) {
     return {
         visitor: {
             ImportDeclaration(path, { opts }) {
-                log(chalk.blue.bgRed.bold('Hello world!'));
                 let isStyle = false
                 // 如果需要获取参数可以使用opts
                 if (opts && !opts.libraryName) {
                     throw 'libraryname is required'
                 }
                 if (Object.is(path.node.source.value, opts.libraryName)) {
-                    // console.log(path.scope.bindings.Table.references, '>>>>>>>>>>>>>>>>>')
                     if (opts && !opts.libraryDirectory) {
                         opts.libraryDirectory = 'lib'
-                        // throw 'Librarydirectory will be defaulted to lib, please confirm whether it is suitable'
+                        log()
+                        log(warning('Librarydirectory will be defaulted to lib, please confirm whether it is suitable'));
                     }
-                    if (opts && opts.style || opts.styleCustom) {
+                    if (opts && opts.style || opts.styleCustom || opts.styleLibraryDirectory) {
                         isStyle = true
                     }
                     const { libraryName, libraryDirectory } = opts
@@ -46,8 +46,8 @@ module.exports = function(babel) {
                                 importDeclarationComponent = getImportDeclaration([importDefaultSpecifier], stringLiteralComponent)
                                 if (isStyle) {
                                     // if opts.style && opts.styleCustom exist throw err 
-                                    if (opts.style && opts.styleCustom) {
-                                        throw 'opts.style or opts.styleCustom can only have one, but received two'
+                                    if (opts.style && opts.styleCustom && opts.styleLibraryDirectory) {
+                                        throw 'style or styleCustom or styleLibraryDirectory can only have one, but received two'
                                     }
                                     let stringLiteralStyle = ''
                                     if (opts.style) {
@@ -55,6 +55,9 @@ module.exports = function(babel) {
                                     }
                                     if (opts.styleCustom) {
                                         stringLiteralStyle = `${libraryName}/${eval(opts.styleCustom)(getLowerCase(specifiersName))}`
+                                    }
+                                    if (opts.styleLibraryDirectory) {
+                                        stringLiteralStyle = `${libraryName}/${opts.styleLibraryDirectory}/${eval(opts.styleCustom)(getLowerCase(specifiersName))}`
                                     }
                                     importDeclarationStyle = getImportDeclaration([], stringLiteralStyle)
                                 }
