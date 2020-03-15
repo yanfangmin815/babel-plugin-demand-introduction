@@ -42,11 +42,6 @@ module.exports = function(babel) {
                             path.remove()
                             return
                         }
-                        // 不能包含默认导入和命名空间导入
-                        if (specifiers.some(i => t.isImportDefaultSpecifier(i) || t.isImportNamespaceSpecifier(i))) {
-                            return
-                            // throw getBuildCodeFrameError(path, "不能使用默认导入或命名空间导入")
-                        }
                         for (let i=0; i<len; i++) {
                             const specifiersName = specifiers[i].imported.name
                             // 开启类tree-shaking效果，未引用变量不处理
