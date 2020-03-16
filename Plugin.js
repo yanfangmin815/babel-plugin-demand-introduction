@@ -95,7 +95,7 @@ module.exports = class Plugin {
         } catch (error) {
             throw getBuildCodeFrameError(path, error)
         } finally {
-            typesArrs.length ? path.replaceWithMultiple(typesArrs) : ''
+            typesArrs.length ? path.replaceWithMultiple(typesArrs) : path.remove()
         }
     }           
 }
