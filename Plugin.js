@@ -3,6 +3,12 @@ const chalk = require('chalk');
 const assert = require('assert');
 const log = console.log;
 const warning = chalk.bold.blue;
+var reg = /style\w*/g;
+
+function getStyleNum(context) {
+   const notNull = Reflect.ownKeys(context).map((item,index) => context[item] && item)
+   return notNull.join(',').match(reg).length
+}
 
 function getLowerCase(str) {
   return str.toLowerCase()
@@ -35,6 +41,14 @@ module.exports = class Plugin {
     this.style = style || false;
   }
 
+  getPluginState(state) {
+    if (!state[this.pluginStateKey]) {
+      state[this.pluginStateKey] = {};  // eslint-disable-line
+    }
+    return state[this.pluginStateKey];
+  }
+
+
   ProgramEnter(path, state) {
     
   }
@@ -59,10 +73,6 @@ module.exports = class Plugin {
         // new path.node.specifiers.length 个ImportDeclaration语句：引入组件&引入样式文件
         // 注意：try...catch放到for循环体内外的区别
         try {
-            if (!len) {
-                path.remove()
-                return
-            }
             for (let i=0; i<len; i++) {
                 const specifiersName = specifiers[i].imported.name
                 // 开启类tree-shaking效果，未引用变量不处理
@@ -74,8 +84,8 @@ module.exports = class Plugin {
                     importDeclarationComponent = getImportDeclaration([importDefaultSpecifier], stringLiteralComponent)
                     if (isStyle) {
                         // if this.style && this.styleCustom && this.styleLibraryDirectory exist throw err 
-                        if (this.style && this.styleCustom && this.styleLibraryDirectory) {
-                            throw getBuildCodeFrameError(path, "style or styleCustom or styleLibraryDirectory can only have one, but received three")
+                        if(getStyleNum(this) > 1) {
+                            throw getBuildCodeFrameError(path, "style or styleCustom or styleLibraryDirectory can only have one, but received more than one")
                         }
                         let stringLiteralStyle = ''
                         if (this.style) {
