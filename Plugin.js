@@ -41,13 +41,6 @@ module.exports = class Plugin {
     this.style = style || false;
   }
 
-  getPluginState(state) {
-    if (!state[this.pluginStateKey]) {
-      state[this.pluginStateKey] = {};  // eslint-disable-line
-    }
-    return state[this.pluginStateKey];
-  }
-
 
   ProgramEnter(path, state) {
     
@@ -88,7 +81,7 @@ module.exports = class Plugin {
                             throw getBuildCodeFrameError(path, "style variable can only have one, but received more than one")
                         }
                         let stringLiteralStyle = ''
-                        
+
                         if (this.style) {
                             stringLiteralStyle = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}/style/${opts.style}`
                         }
