@@ -88,6 +88,7 @@ module.exports = class Plugin {
                             throw getBuildCodeFrameError(path, "style variable can only have one, but received more than one")
                         }
                         let stringLiteralStyle = ''
+                        
                         if (this.style) {
                             stringLiteralStyle = `${libraryName}/${libraryDirectory}/${getLowerCase(specifiersName)}/style/${opts.style}`
                         }
