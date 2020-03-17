@@ -86,7 +86,7 @@ module.exports = class Plugin {
                         // if this.style && this.styleCustom && this.styleLibraryDirectory exist throw err 
                         if(getStyleNum(this) > 1) {
                           
-                            throw getBuildCodeFrameError(path, "style or styleCustom or styleLibraryDirectory can only have one, but received more than one")
+                            throw getBuildCodeFrameError(path, "style variable can only have one, but received more than one")
                         }
                         let stringLiteralStyle = ''
                         if (this.style) {
